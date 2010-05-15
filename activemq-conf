@@ -1,0 +1,3 @@
+
+ACTIVEMQ_HOME=/usr/share/activemq
+ACTIVEMQ_BASE=${ACTIVEMQ_HOME}
