@@ -1,7 +1,15 @@
 PKGNAME=apache-activemq
-PKGVERSION=$(shell grep '%global amqversion' ${PKGNAME}.spec | awk '{print $$3}')
+AMQVERSION=$(shell grep '%global amqversion' ${PKGNAME}.spec | awk '{print $$3}')
+SNAPSHOT= $(shell grep '^%global snapshot_version' apache-activemq.spec 2&>/dev/null| cut -f3 -d' ' )
 
-TGZREPO=http://www.apache.org/dist/activemq/${PKGNAME}/${PKGVERSION}
+
+ifdef ${SNAPSHOT}
+	PKGVERSION=${AMQVERSION}
+	TGZREPO=http://www.apache.org/dist/activemq/${PKGNAME}/${PKGVERSION}
+else
+	PKGVERSION=${AMQVERSION}-SNAPSHOT
+	TGZREPO=https://repository.apache.org/content/repositories/snapshots/org/apache/activemq/${PKGNAME}/${PKGVERSION}
+endif
 
 BUILD=${shell pwd}/build
 PATCHFILES := $(shell ls *.patch)
