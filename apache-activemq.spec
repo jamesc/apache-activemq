@@ -22,7 +22,9 @@ License:        Apache License
 URL:            http://activemq.apache.org/
 Source0: %{?snapshot_version:https://repository.apache.org/content/repositories/snapshots/org/apache/activemq/%{name}/%{pkgversion}/%{name}-%{pkgversion}-bin.tar.gz}%{!?snapshot_version:http://www.apache.org/dist/activemq/%{name}/%{pkgversion}/%{name}-%{pkgversion}-bin.tar.gz}
 Source1:        activemq-conf
-Source2:        activemq.initd
+Patch0:         init.d.patch
+Patch1:         wrapper.conf.patch
+Patch2:         log4j.patch
 BuildRoot:      %{_tmppath}/%{name}-%{pkgversion}-%{release}-root-%(%{__id_u} -n)
 
 %define amqhome /usr/share/activemq
@@ -48,6 +50,10 @@ Client jar for Apache ActiveMQ
 
 %prep
 %setup -q -n apache-activemq-%{pkgversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+
 
 %build
 /bin/true
@@ -67,7 +73,8 @@ pushd $RPM_BUILD_ROOT/usr/bin
     ln -s %{amqhome}/bin/activemq activemq
 popd
 
-mkdir -p $RPM_BUILD_ROOT/etc/activemq
+mkdir -p $RPM_BUILD_ROOT/etc
+mv $RPM_BUILD_ROOT%{amqhome}/conf $RPM_BUILD_ROOT/etc/activemq
 pushd $RPM_BUILD_ROOT%{amqhome}
   ln -s /etc/activemq conf
 popd
@@ -92,10 +99,11 @@ mv $RPM_BUILD_ROOT%{amqhome}/activemq-all-%{pkgversion}.jar \
 (cd %{buildroot}%{_javadir} && for jar in *-%{pkgversion}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{pkgversion}||g"`; done)
 
 install -D -m 0644 %{SOURCE1}  $RPM_BUILD_ROOT/etc/activemq.conf
-install -D -m 0755 %{SOURCE2}  $RPM_BUILD_ROOT/etc/init.d/activemq
 
 rm -rf $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqother} 
 rm -rf $RPM_BUILD_ROOT%{amqhome}/bin/macosx
+mv $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqarch}/wrapper.conf $RPM_BUILD_ROOT/etc/activemq
+mv $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqarch}/activemq $RPM_BUILD_ROOT/etc/init.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -129,7 +137,7 @@ fi
 %attr(0755,root,root) /usr/bin/activemq-admin
 %config(noreplace)    /etc/activemq.conf
 
-%attr(775,root,root) %dir /etc/activemq
+%config(noreplace) /etc/activemq/*
 %attr(775,activemq,activemq) %dir /var/log/activemq
 %attr(775,activemq,activemq) %dir /var/run/activemq
 %attr(775,root,activemq)     %dir /var/cache/activemq/data

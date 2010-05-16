@@ -1,5 +1,22 @@
 diff -uNr apache-activemq-5.3.2/conf/log4j.properties apache-activemq-5.3.2p/conf/log4j.properties
 --- apache-activemq-5.3.2/conf/log4j.properties	2010-04-27 00:23:58.000000000 +0200
++++ apache-activemq-5.3.2p/conf/log4j.properties	2010-05-16 11:12:49.000000000 +0200
+@@ -19,7 +19,12 @@
+ # This file controls most of the logging in ActiveMQ which is mainly based around 
+ # the commons logging API.
+ #
+-log4j.rootLogger=INFO, console, logfile
++
++log4j.rootLogger=INFO, logfile
++# Uncomment the next line if running in foreground
++# to get logging on stdout
++#log4j.rootLogger=INFO, console, logfile
++
+ log4j.logger.org.apache.activemq.spring=WARN
+ log4j.logger.org.apache.activemq.web.handler=WARN
+ log4j.logger.org.springframework=WARN
+diff -uNr apache-activemq-5.3.2/conf/log4j.properties apache-activemq-5.3.2p/conf/log4j.properties
+--- apache-activemq-5.3.2/conf/log4j.properties	2010-04-27 00:23:58.000000000 +0200
 +++ apache-activemq-5.3.2p/conf/log4j.properties	2010-05-16 10:55:39.000000000 +0200
 @@ -43,9 +43,9 @@
  
