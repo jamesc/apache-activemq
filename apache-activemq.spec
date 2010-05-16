@@ -1,8 +1,8 @@
 %define debug_package %{nil}
 
 %global amqversion 5.3.2
-# If this is a snapshot, put the date here
-#global snapshot_version 100507
+# If this is a snapshot, put the date here and uncomment
+#global snapshot_version 100516
 
 
 

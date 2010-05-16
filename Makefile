@@ -1,9 +1,9 @@
 PKGNAME=apache-activemq
 AMQVERSION=$(shell grep '%global amqversion' ${PKGNAME}.spec | awk '{print $$3}')
-SNAPSHOT= $(shell grep '^%global snapshot_version' apache-activemq.spec 2&>/dev/null| cut -f3 -d' ' )
+SNAPSHOT= $(shell grep '^%global snapshot_version' apache-activemq.spec | cut -f3 -d' ' )
 
 
-ifdef ${SNAPSHOT}
+ifeq (${SNAPSHOT},)
 	PKGVERSION=${AMQVERSION}
 	TGZREPO=http://www.apache.org/dist/activemq/${PKGNAME}/${PKGVERSION}
 else
