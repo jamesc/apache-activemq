@@ -1,0 +1,16 @@
+diff -uNr apache-activemq-5.3.2/conf/log4j.properties apache-activemq-5.3.2p/conf/log4j.properties
+--- apache-activemq-5.3.2/conf/log4j.properties	2010-04-27 00:23:58.000000000 +0200
++++ apache-activemq-5.3.2p/conf/log4j.properties	2010-05-16 10:55:39.000000000 +0200
+@@ -43,9 +43,9 @@
+ 
+ # File appender
+ log4j.appender.logfile=org.apache.log4j.RollingFileAppender
+-log4j.appender.logfile.file=${activemq.base}/data/activemq.log
+-log4j.appender.logfile.maxFileSize=1024KB
+-log4j.appender.logfile.maxBackupIndex=5
++log4j.appender.logfile.file=${activemq.base}/log/activemq.log
++log4j.appender.logfile.maxFileSize=10240KB
++log4j.appender.logfile.maxBackupIndex=10
+ log4j.appender.logfile.append=true
+ log4j.appender.logfile.layout=org.apache.log4j.PatternLayout
+ log4j.appender.logfile.layout.ConversionPattern=%d | %-5p | %m | %c | %t%n

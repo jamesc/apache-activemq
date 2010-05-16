@@ -1,0 +1,50 @@
+diff -uNr apache-activemq-5.3.2/bin/linux-x86-32/wrapper.conf apache-activemq-5.3.2p/bin/linux-x86-32/wrapper.conf
+--- apache-activemq-5.3.2/bin/linux-x86-32/wrapper.conf	2010-04-27 00:23:58.000000000 +0200
++++ apache-activemq-5.3.2p/bin/linux-x86-32/wrapper.conf	2010-05-16 10:56:40.000000000 +0200
+@@ -20,9 +20,9 @@
+ #********************************************************************
+ 
+ #wrapper.debug=TRUE
+-set.default.ACTIVEMQ_HOME=../..
+-set.default.ACTIVEMQ_BASE=../..
+-wrapper.working.dir=.
++set.default.ACTIVEMQ_HOME=/usr/share/activemq
++set.default.ACTIVEMQ_BASE=/usr/share/activemq
++wrapper.working.dir=/var/log/activemq
+ 
+ # Java Application
+ wrapper.java.command=java
+@@ -85,7 +85,7 @@
+ wrapper.console.loglevel=INFO
+ 
+ # Log file to use for wrapper output logging.
+-wrapper.logfile=%ACTIVEMQ_BASE%/data/wrapper.log
++wrapper.logfile=%ACTIVEMQ_BASE%/log/wrapper.log
+ 
+ # Format of output for the log file.  (See docs for formats)
+ wrapper.logfile.format=LPTM
+diff -uNr apache-activemq-5.3.2/bin/linux-x86-64/wrapper.conf apache-activemq-5.3.2p/bin/linux-x86-64/wrapper.conf
+--- apache-activemq-5.3.2/bin/linux-x86-64/wrapper.conf	2010-04-27 00:23:58.000000000 +0200
++++ apache-activemq-5.3.2p/bin/linux-x86-64/wrapper.conf	2010-05-16 10:56:52.000000000 +0200
+@@ -20,9 +20,9 @@
+ #********************************************************************
+ 
+ #wrapper.debug=TRUE
+-set.default.ACTIVEMQ_HOME=../..
+-set.default.ACTIVEMQ_BASE=../..
+-wrapper.working.dir=.
++set.default.ACTIVEMQ_HOME=/usr/share/activemq
++set.default.ACTIVEMQ_BASE=/usr/share/activemq
++wrapper.working.dir=/var/log/activemq
+ 
+ # Java Application
+ wrapper.java.command=java
+@@ -85,7 +85,7 @@
+ wrapper.console.loglevel=INFO
+ 
+ # Log file to use for wrapper output logging.
+-wrapper.logfile=%ACTIVEMQ_BASE%/data/wrapper.log
++wrapper.logfile=%ACTIVEMQ_BASE%/log/wrapper.log
+ 
+ # Format of output for the log file.  (See docs for formats)
+ wrapper.logfile.format=LPTM
