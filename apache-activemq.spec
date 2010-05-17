@@ -13,12 +13,10 @@
 
 Name:           apache-activemq
 Version:        %{rpmversion}%{?snapshot_version:_SNAPSHOT} 
-Epoch:          1
-Release:        1%{?snapshot_version:.%{snapshot_version}}%{?dist}
+Release:        2%{?snapshot_version:.%{snapshot_version}}%{?dist}
 Summary:        ActiveMQ Messaging Broker
-
-Group:          System    
-License:        Apache License
+Group:          Networking/Daemons
+License:        ASL 2.0
 URL:            http://activemq.apache.org/
 Source0: %{?snapshot_version:https://repository.apache.org/content/repositories/snapshots/org/apache/activemq/%{name}/%{pkgversion}/%{name}-%{pkgversion}-bin.tar.gz}%{!?snapshot_version:http://www.apache.org/dist/activemq/%{name}/%{pkgversion}/%{name}-%{pkgversion}-bin.tar.gz}
 Source1:        activemq-conf
@@ -26,6 +24,7 @@ Patch0:         init.d.patch
 Patch1:         wrapper.conf.patch
 Patch2:         log4j.patch
 BuildRoot:      %{_tmppath}/%{name}-%{pkgversion}-%{release}-root-%(%{__id_u} -n)
+Requires: java
 
 %define amqhome /usr/share/activemq
 
@@ -46,7 +45,7 @@ Group:       System
 Client jar for Apache ActiveMQ
 
 %description
-
+ActiveMQ Messaging Broker
 
 %prep
 %setup -q -n apache-activemq-%{pkgversion}
@@ -86,11 +85,11 @@ pushd $RPM_BUILD_ROOT%{amqhome}
 popd
 
 mkdir -p $RPM_BUILD_ROOT/var/run/activemq
-mkdir -p $RPM_BUILD_ROOT/var/cache/activemq/data
+mkdir -p $RPM_BUILD_ROOT/var/lib/activemq/data
 # this shuld be blank - it comes with an empty logfile
 rm -rf $RPM_BUILD_ROOT/%{amqhome}/data
 pushd $RPM_BUILD_ROOT%{amqhome}
-  ln -s /var/cache/activemq/data data
+  ln -s /var/lib/activemq/data data
 popd
 
 mkdir -p $RPM_BUILD_ROOT%{_javadir}
@@ -105,6 +104,11 @@ rm -rf $RPM_BUILD_ROOT%{amqhome}/bin/macosx
 mv $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqarch}/wrapper.conf $RPM_BUILD_ROOT/etc/activemq
 mv $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqarch}/activemq $RPM_BUILD_ROOT/etc/init.d
 
+#
+# Fix up permissions (rpmlint complains)
+#
+find $RPM_BUILD_ROOT%{amqhome}/webapps -perm 755 -type f  -exec chmod -x '{}' \;
+find $RPM_BUILD_ROOT%{amqhome}/example/ruby/ -name \*.rb -type f -exec chmod +x '{}' \;
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -131,20 +135,31 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{amqhome}/LICENSE
+%doc %{amqhome}/NOTICE  
+%doc %{amqhome}/README.txt
+%doc %{amqhome}/WebConsole-README.txt
 %{amqhome}*
 %attr(0755,root,root) /etc/init.d/activemq
 %attr(0755,root,root) /usr/bin/activemq
 %attr(0755,root,root) /usr/bin/activemq-admin
 %config(noreplace)    /etc/activemq.conf
 
-%config(noreplace) /etc/activemq/*
-%attr(775,activemq,activemq) %dir /var/log/activemq
-%attr(775,activemq,activemq) %dir /var/run/activemq
-%attr(775,root,activemq)     %dir /var/cache/activemq/data
+%config(noreplace) %attr(644,root,root) /etc/activemq/*
+%attr(755,activemq,activemq) %dir /var/log/activemq
+%attr(755,activemq,activemq) %dir /var/run/activemq
+%attr(755,activemq,activemq)     %dir /var/lib/activemq
 
 %files client
+%defattr(-,root,root,-)
 %{_javadir}
 
 %changelog
-* Fri May 07 2010 James Casey <james.casey@cern.ch> - 5.3.1-1
+* Mon May 17 2010 James Casey <james.casey@cern.ch> - 5.3.2-2
+- Integrated comments from Marc Schöchlin
+  - moved /var/cache/activemq to /var/lib/activemq
+- added dependency on java
+- Fixed file permissions (executable bit set on many files)
+- Fixed rpmlint errors
+* Fri May 07 2010 James Casey <james.casey@cern.ch> - 5.3.2-1
 - First version of specfile
