@@ -14,7 +14,7 @@
 
 Name:           activemq
 Version:        %{rpmversion}%{?snapshot_version:_SNAPSHOT} 
-Release:        2%{?snapshot_version:.%{snapshot_version}}%{?dist}
+Release:        3%{?snapshot_version:.%{snapshot_version}}%{?dist}
 Summary:        ActiveMQ Messaging Broker
 Group:          Networking/Daemons
 License:        ASL 2.0
@@ -150,13 +150,15 @@ fi
 %config(noreplace) %attr(644,root,root) /etc/activemq/*
 %attr(755,activemq,activemq) %dir /var/log/activemq
 %attr(755,activemq,activemq) %dir /var/run/activemq
-%attr(755,activemq,activemq)     %dir /var/lib/activemq
+%attr(755,activemq,activemq)  /var/lib/activemq
 
 %files client
 %defattr(-,root,root,-)
 %{_javadir}
 
 %changelog
+* Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.3.2-3%{?dist}
+- Fix bug where /var/lib/activemq/data would not be installed
 * Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.3.2-2%{?dist}
 - Rename package to activemq from apache-activemq
 - Integrated comments from Marc Schöchlin
