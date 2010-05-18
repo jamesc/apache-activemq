@@ -158,6 +158,7 @@ fi
 
 %changelog
 * Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.3.2-2%{?dist}
+- Rename package to activemq from apache-activemq
 - Integrated comments from Marc Schöchlin
   - moved /var/cache/activemq to /var/lib/activemq
 - added dependency on java
