@@ -10,23 +10,24 @@
 # an an RPM version string (i.e. no '-')
 %global rpmversion %(echo %{amqversion} | tr '-' '_')
 %global pkgversion %{amqversion}%{?snapshot_version:-SNAPSHOT}
+%global pkgname apache-%{name}
 
-Name:           apache-activemq
+Name:           activemq
 Version:        %{rpmversion}%{?snapshot_version:_SNAPSHOT} 
 Release:        2%{?snapshot_version:.%{snapshot_version}}%{?dist}
 Summary:        ActiveMQ Messaging Broker
 Group:          Networking/Daemons
 License:        ASL 2.0
 URL:            http://activemq.apache.org/
-Source0: %{?snapshot_version:https://repository.apache.org/content/repositories/snapshots/org/apache/activemq/%{name}/%{pkgversion}/%{name}-%{pkgversion}-bin.tar.gz}%{!?snapshot_version:http://www.apache.org/dist/activemq/%{name}/%{pkgversion}/%{name}-%{pkgversion}-bin.tar.gz}
+Source0: %{?snapshot_version:https://repository.apache.org/content/repositories/snapshots/org/apache/activemq/%{pkgname}/%{pkgversion}/%{pkgname}-%{pkgversion}-bin.tar.gz}%{!?snapshot_version:http://www.apache.org/dist/activemq/%{pkgname}/%{pkgversion}/%{pkgname}-%{pkgversion}-bin.tar.gz}
 Source1:        activemq-conf
 Patch0:         init.d.patch
 Patch1:         wrapper.conf.patch
 Patch2:         log4j.patch
-BuildRoot:      %{_tmppath}/%{name}-%{pkgversion}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{pkgname}-%{pkgversion}-%{release}-root-%(%{__id_u} -n)
 Requires: java
 
-%define amqhome /usr/share/activemq
+%define amqhome /usr/share/%{name}
 
 %if  %{_arch} == i386
 %define amqarch 32
@@ -48,7 +49,7 @@ Client jar for Apache ActiveMQ
 ActiveMQ Messaging Broker
 
 %prep
-%setup -q -n apache-activemq-%{pkgversion}
+%setup -q -n %{pkgname}-%{pkgversion}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -61,10 +62,6 @@ ActiveMQ Messaging Broker
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{amqhome}
 mv * $RPM_BUILD_ROOT%{amqhome}
-
-pushd $RPM_BUILD_ROOT%{amqhome}/bin
-  ln -s linux-x86-%{amqarch} linux
-popd
 
 mkdir -p $RPM_BUILD_ROOT/usr/bin
 pushd $RPM_BUILD_ROOT/usr/bin
@@ -97,14 +94,19 @@ mv $RPM_BUILD_ROOT%{amqhome}/activemq-all-%{pkgversion}.jar \
     $RPM_BUILD_ROOT%{_javadir}/activemq-all-%{pkgversion}.jar
 (cd %{buildroot}%{_javadir} && for jar in *-%{pkgversion}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{pkgversion}||g"`; done)
 
-install -D -m 0644 %{SOURCE1}  $RPM_BUILD_ROOT/etc/activemq.conf
-
+#
+# Fix up binaries
+#
 rm -rf $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqother} 
 rm -rf $RPM_BUILD_ROOT%{amqhome}/bin/macosx
 mv $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqarch}/wrapper.conf $RPM_BUILD_ROOT/etc/activemq
 mv $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqarch}/activemq $RPM_BUILD_ROOT/etc/init.d
 
-#
+mkdir -p $RPM_BUILD_ROOT/usr/lib/%{name}/linux
+mv $RPM_BUILD_ROOT%{amqhome}/bin/linux-x86-%{amqarch}/* $RPM_BUILD_ROOT/usr/lib/%{name}/linux
+
+install -D -m 0644 %{SOURCE1}  $RPM_BUILD_ROOT/etc/activemq.conf
+
 # Fix up permissions (rpmlint complains)
 #
 find $RPM_BUILD_ROOT%{amqhome}/webapps -perm 755 -type f  -exec chmod -x '{}' \;
@@ -144,7 +146,7 @@ fi
 %attr(0755,root,root) /usr/bin/activemq
 %attr(0755,root,root) /usr/bin/activemq-admin
 %config(noreplace)    /etc/activemq.conf
-
+/usr/lib/%{name}
 %config(noreplace) %attr(644,root,root) /etc/activemq/*
 %attr(755,activemq,activemq) %dir /var/log/activemq
 %attr(755,activemq,activemq) %dir /var/run/activemq
@@ -155,11 +157,12 @@ fi
 %{_javadir}
 
 %changelog
-* Mon May 17 2010 James Casey <james.casey@cern.ch> - 5.3.2-2
+* Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.3.2-2%{?dist}
 - Integrated comments from Marc Schöchlin
   - moved /var/cache/activemq to /var/lib/activemq
 - added dependency on java
 - Fixed file permissions (executable bit set on many files)
 - Fixed rpmlint errors
+- move platform dependant binaries to /usr/lib
 * Fri May 07 2010 James Casey <james.casey@cern.ch> - 5.3.2-1
 - First version of specfile

@@ -66,7 +66,7 @@ diff -uNr apache-activemq-5.3.2/bin/linux-x86-64/activemq apache-activemq-5.3.2p
  # Wrapper
 -WRAPPER_CMD="wrapper"
 -WRAPPER_CONF="wrapper.conf"
-+WRAPPER_CMD="/usr/share/activemq/bin/linux/wrapper"
++WRAPPER_CMD="/usr/lib/activemq/linux/wrapper"
 +WRAPPER_CONF="/etc/activemq/wrapper.conf"
  
  # Priority at which to run the wrapper.  See "man nice" for valid priorities.

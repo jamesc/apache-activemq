@@ -1,6 +1,7 @@
+SPECNAME=activemq
 PKGNAME=apache-activemq
-AMQVERSION=$(shell grep '%global amqversion' ${PKGNAME}.spec | awk '{print $$3}')
-SNAPSHOT= $(shell grep '^%global snapshot_version' apache-activemq.spec | cut -f3 -d' ' )
+AMQVERSION=$(shell grep '%global amqversion' ${SPECNAME}.spec | awk '{print $$3}')
+SNAPSHOT= $(shell grep '^%global snapshot_version' ${SPECNAME}.spec | cut -f3 -d' ' )
 
 
 ifeq (${SNAPSHOT},)
@@ -32,7 +33,7 @@ prepare: sources
 	cp activemq-conf $(PATCHFILES) ${PKGNAME}-${PKGVERSION}-bin.tar.gz build/SOURCES 
 
 rpm: prepare
-	@rpmbuild -ba --define='_topdir $(BUILD)' $(PKGNAME).spec
+	@rpmbuild -ba --define='_topdir $(BUILD)' $(SPECNAME).spec
 
 clean:
 	@for F in $(SOURCEFILES) ; do \
