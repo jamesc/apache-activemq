@@ -1,8 +1,8 @@
 %define debug_package %{nil}
 
-%global amqversion 5.3.2
+%global amqversion 5.4
 # If this is a snapshot, put the date here and uncomment
-#global snapshot_version 100516
+%global snapshot_version 20100519
 
 
 
@@ -13,8 +13,8 @@
 %global pkgname apache-%{name}
 
 Name:           activemq
-Version:        %{rpmversion}%{?snapshot_version:_SNAPSHOT} 
-Release:        3%{?snapshot_version:.%{snapshot_version}}%{?dist}
+Version:        %{rpmversion}
+Release:        %{!?snapshot_version:1}%{?snapshot_version:0.%{snapshot_version}_SNAPSHOT}%{?dist}
 Summary:        ActiveMQ Messaging Broker
 Group:          Networking/Daemons
 License:        ASL 2.0
@@ -157,6 +157,8 @@ fi
 %{_javadir}
 
 %changelog
+* Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.4-1%{?dist}
+- rebuild for 5.4
 * Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.3.2-3%{?dist}
 - Fix bug where /var/lib/activemq/data would not be installed
 * Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.3.2-2%{?dist}
