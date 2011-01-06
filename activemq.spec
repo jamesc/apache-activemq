@@ -157,10 +157,8 @@ fi
 %{_javadir}
 
 %changelog
-<<<<<<< HEAD:activemq.spec
 * Thu Jan 06 2011 James Casey <james.casey@cern.ch> - 5.4.2-1%{?dist}
 - rebuild for 5.4.2
-=======
 * Sun Nov 07 2010 James Casey <jamesc.000@gmail.com> - 5.4.1-1%{?dist}
 - rebuild for 5.4.1
 >>>>>>> 142c0af86d97849fe67e53396e0f48a711addf19:activemq.spec
