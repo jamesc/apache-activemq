@@ -1,8 +1,8 @@
 %define debug_package %{nil}
 
-%global amqversion 5.4
+%global amqversion 5.4.2
 # If this is a snapshot, put the date here and uncomment
-%global snapshot_version 20100519
+#global snapshot_version 20100519
 
 
 
@@ -157,6 +157,8 @@ fi
 %{_javadir}
 
 %changelog
+* Thu Jan 06 2011 James Casey <james.casey@cern.ch> - 5.4.2-1%{?dist}
+- rebuild for 5.4.2
 * Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.4-1%{?dist}
 - rebuild for 5.4
 * Tue May 18 2010 James Casey <james.casey@cern.ch> - 5.3.2-3%{?dist}
